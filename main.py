@@ -1,6 +1,7 @@
 import spotipy
 import os
 import lyricgrabber
+import lyricwebscrape
 
 def main():
     song = lyricgrabber.get_playback()
