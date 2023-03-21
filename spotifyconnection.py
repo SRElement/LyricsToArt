@@ -10,7 +10,8 @@ class SpotifyConnection():
         self.scope = ''
 
     def set_scope(self, scope):
-        self.scope = scope
+        if self.scope != scope:
+            self.scope = scope
         auth_manager = SpotifyOAuth(scope=self.scope)
         self.connection = Spotify(auth_manager=auth_manager)
 
@@ -22,6 +23,18 @@ class SpotifyConnection():
         songTitle = playback['item']['name']
         artistName = playback['item']['album']['artists'][0]['name']
         return {'songTitle':songTitle, "artistName":artistName}
+    
+    def get_playback_state(self):
+        self.set_scope("user-read-playback-state")
+
+        playback = self.connection.current_playback()
+        # print(json.dumps(playback, indent=4))
+
+        isPlaying = playback['is_playing']
+        progressMs = playback['progress_ms']
+
+        return {'is_playing':isPlaying,'progress_ms':progressMs}
+
         
 
 
