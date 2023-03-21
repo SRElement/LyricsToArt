@@ -1,12 +1,14 @@
 import spotipy
 import os
-import lyricgrabber
-import lyricwebscrape
+from spotifyconnection import SpotifyConnection
+from lyricfinder import Lyrics
 
 def main():
-    song = lyricgrabber.get_playback()
-    print(song["songTitle"])
-    lyricgrabber.get_lyrics_genius(song)
+    spotify = SpotifyConnection()
+    songInfo = spotify.get_playback()
+    songLyrics = Lyrics(song=songInfo["songTitle"], artist=songInfo["artistName"])
+    print(songLyrics.format_lyrics())
+
 
 if __name__ == "__main__":
     main()
