@@ -17,14 +17,13 @@ def timestampsToMs(timeStamps):
 
     return timeStamps
 
-def hashString(stringToHash):
+def hashString(strToHash): #To find imgs?
     hash = hashlib.md5()
-    hash.update(stringToHash)
-    str(int(hash.hexdigest(), 16))[0:12]
+    hash.update(strToHash.encode('utf-8'))
+    hashedStr = str(int(hash.hexdigest(), 16))[0:12]
 
-    return stringToHash
+    return hashedStr
     
-
 
 class Lyrics:
     def __init__(self, song, artist):
@@ -36,41 +35,41 @@ class Lyrics:
         self.emotions = []
         self.lyricJson = {}
 
-        self.fetch()
+        self.fetch_lyrics()
 
     def __lyrics__(self):
         return self.lyrics
     
     def __timeStamps__(self):
-        return self.timeStamps
+        return self.timeStampsMs
     
     def __emotions__(self):
         return self.emotions
     
-    def fetch(self):
+    def fetch_lyrics(self):
         l = Lyricy()
 
-        try:
-            query = self.song.lower()
-            results = l.search(query)
-            selected_lyrics = results[0]
-            selected_lyrics.fetch()
-            self.format(selected_lyrics.lyrics)
-        except:
-            print("This song cannot be found")
-            return None
+        query = self.song.lower()
+        print("Searching... " + query)
+        results = l.search(query)
+        selected_lyrics = results[0]
+        selected_lyrics.fetch()
+        self.format(selected_lyrics.lyrics)
+
         
     def format(self,lyrics):
+        print("formatting...")
+        
         emotionModel = TextToEmotion()
 
-        self.timeStamps = timestampsToMs(re.findall("\[(0.*?)\]", lyrics))
+        self.timeStampsMs = timestampsToMs(re.findall("\[(0.*?)\]", lyrics))
         self.lyrics = re.findall("(?<=\]).*[^-\s]", lyrics)
         self.emotions = emotionModel.labelEmotionsFromList(self.lyrics)
 
-        lyricJson = {}
 
-        for i in range(0,len(self.timeStamps)):
-            lyricJson.append({"id" : hashString(self.lyrics),"timeStampMs" : self.timeStampsMs[i], "lyric" : self.lyrics[i]})
+        for i in range(0,len(self.lyrics)-1):
+            self.lyricJson[self.timeStampsMs[i]] = {"lyric" : self.lyrics[i], "emotion" : self.emotions[i], "hashId" : hashString(self.lyrics[i])}
+        self.lyricJson["timeStampsMs"] = self.timeStampsMs
 
-        self.lyricJson = json.dumps(lyricJson)
+        self.lyricJson = json.dumps(self.lyricJson, indent=4)
 
