@@ -6,9 +6,11 @@ from time import sleep
 
 def main():
     spotify = SpotifyConnection()
-    songInfo = spotify.get_playback()
+    while True:
+        spotify.get_playback()
+    print(spotify.get_playback_state())
     #songLyrics = Lyrics(song=songInfo["songTitle"], artist=songInfo["artistName"])
-    songLyrics = Lyrics(song="Budapest",artist="George Ezra")
+    #songLyrics = Lyrics(song="Budapest",artist="George Ezra")
     
     print("Ready")
 
