@@ -14,7 +14,6 @@ class TextToEmotion():
         emotionList = []
         for i in range(0,len(list)):
             emotionList.append(self.emotionModel(list[i])[0]['label'])
-        print(emotionList)
         return emotionList
 
 
