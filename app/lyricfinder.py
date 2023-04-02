@@ -37,14 +37,8 @@ class Lyrics:
 
         self.fetch_lyrics()
 
-    def __lyrics__(self):
-        return self.lyrics
-    
-    def __timeStamps__(self):
-        return self.timeStampsMs
-    
-    def __emotions__(self):
-        return self.emotions
+    def __JSON__(self):
+         return self.lyricJson
     
     def fetch_lyrics(self):
         l = Lyricy()
@@ -58,8 +52,7 @@ class Lyrics:
 
         
     def format(self,lyrics):
-        print("formatting...")
-        
+
         emotionModel = TextToEmotion()
 
         self.timeStampsMs = timestampsToMs(re.findall("\[(0.*?)\]", lyrics))
@@ -68,8 +61,8 @@ class Lyrics:
 
 
         for i in range(0,len(self.lyrics)-1):
-            self.lyricJson[self.timeStampsMs[i]] = {"lyric" : self.lyrics[i], "emotion" : self.emotions[i], "hashId" : hashString(self.lyrics[i])}
-        self.lyricJson["timeStampsMs"] = self.timeStampsMs
+            self.lyricJson[self.timeStampsMs[i]] = {"lyric" : self.lyrics[i], "emotion" : self.emotions[i], "hash_id" : hashString(self.lyrics[i])}
+        self.lyricJson["time_stamps_ms"] = self.timeStampsMs
 
         self.lyricJson = json.dumps(self.lyricJson, indent=4)
 
