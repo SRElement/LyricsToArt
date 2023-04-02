@@ -10,8 +10,8 @@ def main():
     songLyrics = Lyrics(song=songInfo["songTitle"], artist=songInfo["artistName"])
     lyrics = songLyrics.__lyrics__()
     timeStamps = songLyrics.__timeStamps__()
+    emotions = songLyrics.__emotions__()
     
-
     maxIndex = len(timeStamps)-1
     lastTimeStamp = 0
     currentIndex = -1
@@ -36,12 +36,11 @@ def main():
             if currentIndex > -1: #If song past first lyric
                 currentLyric = lyrics[currentIndex]
                 currentTimeStamp = timeStamps[currentIndex]
+                currentEmotion = emotions[currentIndex]
                 if lastTimeStamp != currentTimeStamp: #If not last printed to user print the lyric
-                    print(currentLyric)
+                    print(currentLyric + ' = ' + currentEmotion)
                     lastTimeStamp = currentTimeStamp
                         
-
-        sleep(1)
 
 if __name__ == "__main__":
     main()
