@@ -42,13 +42,30 @@ class Lyrics:
     
     def fetch_lyrics(self):
         l = Lyricy()
+        songFound = False
 
         query = self.song.lower()
         print("Searching... " + query)
+
         results = l.search(query)
-        selected_lyrics = results[0]
-        selected_lyrics.fetch()
-        self.format(selected_lyrics.lyrics)
+        resultIndex = 0
+        resultMaxIndex = len(results)
+
+        while songFound == False and resultIndex != resultMaxIndex:
+            if self.artist.lower() in results[resultIndex].title.lower():
+                selected_lyrics = results[int(results[resultIndex].index)-1]
+                selected_lyrics.fetch()
+                self.format(selected_lyrics.lyrics)
+                songFound = True
+            elif "no result found" in results[resultIndex].title.lower():
+                self.lyricJson = {}
+
+            resultIndex += 1
+
+        print("SongFound = " + str(songFound))
+
+
+        
 
         
     def format(self,lyrics):

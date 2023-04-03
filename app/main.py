@@ -1,16 +1,19 @@
 import spotipy
 import os
+import json
 from spotifyconnection import SpotifyConnection
 from lyricfinder import Lyrics
 from time import sleep
 
 def main():
     spotify = SpotifyConnection()
-    while True:
-        spotify.get_playback()
-    print(spotify.get_playback_state())
-    #songLyrics = Lyrics(song=songInfo["songTitle"], artist=songInfo["artistName"])
-    #songLyrics = Lyrics(song="Budapest",artist="George Ezra")
+    # while True:
+    #     spotify.get_playback()
+    # print(spotify.get_playback_state())
+    songInfo = spotify.get_playback()
+    print(json.dumps(songInfo, indent=4))
+    #songLyrics = Lyrics(song=songInfo["song_title"], artist=songInfo["artist_name"])
+    songLyrics = Lyrics(song="Beliver",artist="Imagin Dragons")
     
     print("Ready")
 
