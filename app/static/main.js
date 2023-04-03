@@ -4,16 +4,19 @@ const Lyrics = {
     data() {
         return {
             songPlayingInfo: {},
-            lyric: {},
+            lyric: 'Lyrics here',
             lyrics: "Please wait...",
-            playState: {}
+            playState: {},
+            currArtistName: '',
+            currSongTitle: '',
+            songFound: false
 
         }
     },
     async created() {
 
         let binarySearch = function (arr, currTime, start, end) {
-            if (start > end) return false;
+            if (start > end) return false; //Neccisarry?
 
             let mid = Math.floor((start + end) / 2);
 
@@ -25,19 +28,38 @@ const Lyrics = {
                 return binarySearch(arr, currTime, mid + 1, end);
         }
 
-        await this.getLyrics()
 
         while (true) {
             await this.getSongInfo()
             await this.getPlayback()
 
             if (this.playState["is_playing"] == true) {
-                timeSampsMs = this.lyrics["time_stamps_ms"]
-                progressMs = this.playState["progress_ms"]
 
-                currLyricTimeStampMs = binarySearch(timeSampsMs, progressMs, 0, timeSampsMs.length - 1)
-                if (currLyricTimeStampMs != false) {
-                    this.lyric = this.lyrics[currLyricTimeStampMs]
+                if (this.songPlayingInfo["artist_name"] != this.currArtistName || this.songPlayingInfo["song_title"] != this.currSongTitle) {
+
+                    this.lyric = 'Searching...'
+                    this.currSongTitle = this.songPlayingInfo["song_title"]
+                    this.currArtistName = this.songPlayingInfo["artist_name"]
+
+                    await this.getLyrics()
+                    if (Object.keys(this.lyrics).length === 0 && this.lyrics.constructor === Object) {
+                        this.songFound = false
+                    } else {
+                        this.songFound = true
+                    }
+                }
+
+                if (this.songFound == true) {
+
+                    timeSampsMs = this.lyrics["time_stamps_ms"]
+                    progressMs = this.playState["progress_ms"]
+
+                    currLyricTimeStampMs = binarySearch(timeSampsMs, progressMs, 0, timeSampsMs.length - 1)
+                    if (currLyricTimeStampMs != false) {
+                        this.lyric = this.lyrics[currLyricTimeStampMs]
+                    }
+                } else {
+                    this.lyric = 'Lyrics cant be found'
                 }
 
             }
@@ -45,7 +67,8 @@ const Lyrics = {
     },
     methods: {
         async getLyrics() {
-            const response = await fetch("/getLyrics", {
+            url = "/getLyrics/" + this.songPlayingInfo["artist_name"] + "/" + this.songPlayingInfo["song_title"]
+            const response = await fetch(url, {
                 method: 'get',
                 headers: {
                     'X-Requested-With': 'XMLHttpRequest'
