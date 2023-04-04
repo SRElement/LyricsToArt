@@ -69,7 +69,7 @@ if __name__ == '__main__':
     print(args)
     generate_image(
         is_mega=args.mega,
-        text="dance, Photorealistic",
+        text="said shut dance, Photorealistic",
         seed=args.seed,
         grid_size=args.grid_size,
         top_k=args.top_k,
