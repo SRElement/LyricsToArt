@@ -135,4 +135,4 @@ wandb/
 *.egg-info/
 jax_cache/
 pretrained/
-.png
+*.png
