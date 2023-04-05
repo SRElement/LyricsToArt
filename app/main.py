@@ -13,7 +13,7 @@ def main():
     songInfo = spotify.get_playback()
     print(json.dumps(songInfo, indent=4))
     #songLyrics = Lyrics(song=songInfo["song_title"], artist=songInfo["artist_name"])
-    songLyrics = Lyrics(song="Beliver",artist="Imagin Dragons")
+    songLyrics = Lyrics(song="Stressed Out",artist="Twenty One Pilots")
     
     print("Ready")
 
