@@ -136,3 +136,4 @@ wandb/
 jax_cache/
 pretrained/
 *.png
+app/static/IMG

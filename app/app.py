@@ -36,6 +36,12 @@ def getLyrics(artist,song):
 def getPlayback():
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         return(jsonify(spotify.get_playback_state()))
+    
+@app.route("/uploadImages/<path>", method=["GET"])
+def uploadImages(path):
+    if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
+        #Get image folder
+        return(jsonify(spotify.get_playback_state()))
         
 
 
