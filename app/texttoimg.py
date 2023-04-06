@@ -17,7 +17,8 @@ class MinDalleTextToImage():
         self.parser.add_argument('--models-root', type=str, default='pretrained')
         self.parser.add_argument('--top_k', type=int, default=256)
         self.parser.add_argument('--file-dir', type=str, default="generated_images")
-        self.args = self.parser.parse_args()
+        #self.args = self.parser.parse_args()
+        self.args, self.unknown = self.parser.parse_known_args()
 
     def __args__(self):
         return self.args

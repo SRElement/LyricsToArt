@@ -12,6 +12,8 @@ class PromptGenerator():
         for token in self.nlp(doc):
             if token.pos_ in self.excluded_tags:
                 prompt.append(token.text)
+        if prompt == []:
+            prompt = [text]
         return ' '.join(prompt)
         
 

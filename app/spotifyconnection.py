@@ -29,7 +29,7 @@ class SpotifyConnection():
             artistName = None
             id = None
 
-        return {'id':id, 'song_title':songTitle, "artist_name":artistName}
+        return {'song_id':id, 'song_title':songTitle, "artist_name":artistName}
     
     def get_playback_state(self):
         self.set_scope("user-read-playback-state")

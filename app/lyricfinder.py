@@ -1,7 +1,9 @@
 from lyricy import Lyricy
 import json
 import re
+import os
 import hashlib
+
 from texttoimg import MinDalleTextToImage
 from promtgeneration import PromptGenerator
 
@@ -24,40 +26,42 @@ def hashString(strToHash): #To find imgs?
 
     return hashedStr
 
-def genImageForLyrics(song, artist, lyrics):
+def genImageForLyrics(song_id, lyrics):
         
         promtGen = PromptGenerator()
         d = MinDalleTextToImage()
 
         completed = []
 
-        for lyric in lyrics:
+        if not(os.path.exists("static/IMG/" + str(song_id))):
+            for lyric in lyrics:
 
-            if not(hashString(lyric.lower()) in completed):
-                prompt = promtGen.generatePromtFromString(lyric)
+                if not(hashString(lyric.lower()) in completed):
+                    prompt = promtGen.generatePromtFromString(lyric)
 
-                print(lyric)
-                print(prompt)
+                    print(lyric)
+                    print(prompt)
 
-                if prompt != '':
-                    d.generate_image(
-                    is_mega=d.__args__().mega,
-                    text= prompt + ", Photorealistic",
-                    seed=d.__args__().seed,
-                    grid_size=d.__args__().grid_size,
-                    top_k=d.__args__().top_k,
-                    image_path= str(hashString(lyric.lower())),
-                    models_root=d.__args__().models_root,
-                    fp16=d.__args__().fp16,
-                    file_dir= "app/static/IMG/" + str(hashString((song+artist).lower()))
-                    )
+                    if prompt != '':
+                        d.generate_image(
+                        is_mega=d.__args__().mega,
+                        text= prompt + ", Photorealistic",
+                        seed=d.__args__().seed,
+                        grid_size=d.__args__().grid_size,
+                        top_k=d.__args__().top_k,
+                        image_path= str(hashString(lyric.lower())),
+                        models_root=d.__args__().models_root,
+                        fp16=d.__args__().fp16,
+                        file_dir= "static/IMG/" + str(song_id)
+                        )
 
-                    completed.append(hashString(lyric.lower()))
+                        completed.append(hashString(lyric.lower()))
     
 
 class Lyrics:
-    def __init__(self, song, artist):
+    def __init__(self, songId, song, artist):
 
+        self.songId = songId
         self.song = song
         self.artist = artist
 
@@ -76,7 +80,7 @@ class Lyrics:
         songFound = False
 
         query = self.song.lower()
-        print("Searching... " + query)
+        print("Searching for... " + query)
 
         results = l.search(query)
         resultIndex = 0
@@ -100,7 +104,7 @@ class Lyrics:
 
         self.timeStampsMs = timestampsToMs(re.findall("\[(0.*?)\]", lyrics))
         self.lyrics = re.findall("(?<=\]).*[^-\s]", lyrics)
-        genImageForLyrics(self.song, self.artist, self.lyrics)
+        genImageForLyrics(self.songId, self.lyrics)
 
 
         for i in range(0,len(self.lyrics)-1):
