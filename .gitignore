@@ -135,5 +135,6 @@ wandb/
 *.egg-info/
 jax_cache/
 pretrained/
+app/pretrained/
 *.png
 app/static/IMG

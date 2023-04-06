@@ -1,7 +1,8 @@
 from flask import Flask, redirect, render_template, request, jsonify
 from dotenv import load_dotenv
-from lyricfinder import Lyrics
+import os
 
+from lyricfinder import Lyrics
 from spotifyconnection import SpotifyConnection
 
 load_dotenv('./.flaskenv')
@@ -16,16 +17,17 @@ test = "test"
 def index():
     return render_template("lyricstoart.html")
     
+
 @app.route("/getSongInfo", methods=["GET"])
 def getSongInfo():
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         return(jsonify(spotify.get_playback()))
 
 
-@app.route("/getLyrics/<artist>/<song>", methods=["GET"])
-def getLyrics(artist,song):
+@app.route("/getLyrics/<artist>/<song>/<songID>", methods=["GET"])
+def getLyrics(artist,song,songID):
     songInfo = spotify.get_playback()
-    songLyrics = Lyrics(song=song, artist=artist)#Get the lyrics
+    songLyrics = Lyrics(songID, song, artist)#Get the lyrics
 
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         return(songLyrics.__JSON__())
@@ -37,22 +39,20 @@ def getPlayback():
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
         return(jsonify(spotify.get_playback_state()))
     
-@app.route("/uploadImages/<path>", method=["GET"])
-def uploadImages(path):
+
+
+@app.route("/getSongImages/<songID>", methods=["GET"])
+def getSongImages(songID):
     if request.headers.get('X-Requested-With') == 'XMLHttpRequest':
-        #Get image folder
-        return(jsonify(spotify.get_playback_state()))
+        IMG_FOLDER = os.path.join('static/IMG', songID)
+        app.config['UPLOAD_FOLDER'] = IMG_FOLDER
+
+        IMG_LIST = os.listdir('static/IMG/' + songID)
+        IMG_JSON = {}
+        for img in IMG_LIST:
+            IMG_JSON[img.replace(".png", "")] = "static/IMG/" + songID + "/" + img
+        return(jsonify(IMG_JSON))
         
-
-
-
-    #Is Spotify playing?
-    #Yes = Get lyric
-    #No = Display pause, click again to start
-
-    #THEN
-    #Once lyrics have been retrived
-    #COnstantly get playback stated
 
 
 
