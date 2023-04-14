@@ -1,3 +1,4 @@
+import string
 from lyricy import Lyricy
 import json
 import re
@@ -79,7 +80,7 @@ class Lyrics:
         l = Lyricy()
         songFound = False
 
-        query = self.song.lower()
+        query = self.song.lower().translate(str.maketrans('', '', string.punctuation))
         print("Searching for... " + query)
 
         results = l.search(query)
